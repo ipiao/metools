@@ -1,4 +1,4 @@
-package metools
+package utils
 
 import (
 	"fmt"
@@ -36,6 +36,7 @@ func GetCoord(address string) string {
 	return string(res)
 }
 
+//
 func GetDistanceAndTime(origins string, destinations string) string {
 
 	var httpUrl = "http://api.map.baidu.com/routematrix/v2/driving?"
