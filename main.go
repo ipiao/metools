@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	var res = utils.GetDistanceAndTime(`30.34308337010581,120.12410124292511`,
-		`30.342446000305196,120.11525567078871`)
-	fmt.Println(res)
+	//var res = utils.GetAddress(`30.34308337010581,120.12410124292511`)
+	var res2 = utils.GetPlanningRoute("39.848585906582,116.25989391769", "40.045728154863,116.31148692685")
+	//fmt.Println(res)
+	fmt.Println(res2)
 }

@@ -21,6 +21,7 @@ func (this V) GetJ() {
 	fmt.Printf("j=%d\n", this.j)
 }
 
+// int64 在32位的机器上表现形式会有所不同
 func Unsafe() {
 	var v = new(V)
 	fmt.Printf("size of V=%d\n", unsafe.Sizeof(*v))
