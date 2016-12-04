@@ -96,15 +96,23 @@ type PlanningRoute struct {
 		} `json:"copyright"`
 	} `json:"info"`
 	Result struct {
-		Routers []Router `json:"routers"`
+		Routers []Router `json:"routes"`
 		Origin  struct {
-			CityName string        `json:"cityName"`
+			OriginPt Location      `json:"originPt"`
+			Wd       string        `json:"wd"`
+			Uid      int           `json:"uid"`
+			AreaId   int           `json:"area_id"`
+			CityName string        `json:"cname"`
 			ListType int           `json:"listType"`
 			Content  []ContentInfo `json:"content"`
 		} `json:"origin"`
 
 		Destination struct {
-			CityName string        `json:"cityName"`
+			OriginPt Location      `json:"originPt"`
+			Wd       string        `json:"wd"`
+			Uid      int           `json:"uid"`
+			AreaId   int           `json:"area_id"`
+			CityName string        `json:"cname"`
 			ListType int           `json:"listType"`
 			Content  []ContentInfo `json:"content"`
 		} `json:"destination"`
@@ -114,9 +122,13 @@ type PlanningRoute struct {
 }
 
 type PointInfo struct {
-	AreaId int    `json:"area_id"`
-	Wd     string `json:"wd"`
-	Uid    int    `json:"uid"`
+	OriginPt Location      `json:"originPt"`
+	Wd       string        `json:"wd"`
+	Uid      int           `json:"uid"`
+	AreaId   int           `json:"area_id"`
+	CityName string        `json:"cname"`
+	ListType int           `json:"listType"`
+	Content  []ContentInfo `json:"content"`
 }
 
 type ContentInfo struct {
