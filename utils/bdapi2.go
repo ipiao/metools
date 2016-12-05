@@ -28,7 +28,8 @@ type BDMapInfo struct {
 //
 const (
 	//ak = "alNeAGUdvXrKmcRyACrWYu9cfnANGQlw"
-	ak         = "6zlc1bckc3iBxLaqpHoqo78mIfeZyGDp"
+	//ak         = "6zlc1bckc3iBxLaqpHoqo78mIfeZyGDp"
+	ak         = "RfPDxNiIPk6hUwdfXO2progMha5V5qej"
 	output     = "json"
 	coord_type = "gcj02" //bd09ll
 )
