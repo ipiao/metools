@@ -5,9 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 // OcrIDCardInput 印刷字识别-身份证-请求
@@ -83,6 +85,9 @@ func AliOcrIDCardStruct(inputs *OcrIDCardInputs) (*OcrIDCardResp, error) {
 // TransPicToOcrIDCardInput 将图片转换为结构体
 func TransPicToOcrIDCardInput(pic, picType string) (OcrIDCardInput, error) {
 	var input = OcrIDCardInput{}
+	// file, _ := os.OpenFile(pic, os.O_RDONLY, os.ModePerm)
+	// var bs = make([]byte, 1024*50)
+	// n, err := file.Read(bs)
 	bs, err := ioutil.ReadFile(pic)
 	if err != nil {
 		return input, err
@@ -107,4 +112,47 @@ func TransIDCardsPicsToOcrIDCardInput(face, back string) (*OcrIDCardInputs, erro
 	var inputs = new(OcrIDCardInputs)
 	inputs.Inputs = append(inputs.Inputs, f, s)
 	return inputs, nil
+}
+
+// TransPicToOcrIDCardInputStr 将图片转换为str
+func TransPicToOcrIDCardInputStr(pic, picType string) (string, error) {
+	var input string
+	bs, err := ioutil.ReadFile(pic)
+	if err != nil {
+		return input, err
+	}
+	input = fmt.Sprintf(`"{
+		"inputs": [
+			{
+				"image": {
+					"dataType": 50,
+					"dataValue": "%s"
+				},
+				"configure": {
+					"dataType": 50,
+					"dataValue": "{\"side\":\"%s\"}"
+				}
+			}
+		]
+	}"`, base64.StdEncoding.EncodeToString(bs), picType)
+	return input, err
+}
+
+// AliOcrIDCardToJSON 阿里印刷字识别-身份证
+func AliOcrIDCardToJSON(inputs string) (string, error) {
+
+	var baseURL = "http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json"
+	cilent := &http.Client{}
+	body := strings.NewReader(inputs)
+	req, _ := http.NewRequest("POST", baseURL, body)
+	req.Header.Add("Authorization", "APPCODE "+aliAppCode)
+	req.Header.Add("Content-Type", "application/json; charset=UTF-8")
+
+	resp, err := cilent.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	rbs, err := ioutil.ReadAll(resp.Body)
+	return string(rbs), err
 }
