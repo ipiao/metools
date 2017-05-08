@@ -35,8 +35,8 @@ type GDMapAddressToCoord struct {
 	}
 }
 
-// GdMapAddressToCoordHSON 主工具函数,返回凭借原始数据
-func GdMapAddressToCoordHSON(address string) (string, error) {
+// GdMapAddressToCoordJSON 主工具函数,返回凭借原始数据
+func GdMapAddressToCoordJSON(address string) (string, error) {
 	var baseURL = "http://restapi.amap.com/v3/geocode/geo?"
 	var values = url.Values{}
 	values.Add("output", "JSON")
@@ -60,7 +60,7 @@ func GdMapAddressToCoordHSON(address string) (string, error) {
 // GdMapAddressToCoordStruct 主工具函数,返回凭借原始数据
 func GdMapAddressToCoordStruct(address string) (*GDMapAddressToCoord, error) {
 	var res = new(GDMapAddressToCoord)
-	str, err := GdMapAddressToCoordHSON(address)
+	str, err := GdMapAddressToCoordJSON(address)
 	if err != nil {
 		log.Println("http调用错误：", err)
 		return nil, err
