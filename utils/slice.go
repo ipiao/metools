@@ -42,3 +42,13 @@ func IndexS(s interface{}, slice interface{}, fn func(i int) bool) int {
 
 	return -1
 }
+
+// IndexStringArray 字符串在数组下标
+func IndexStringArray(s string, a []string) int {
+	for i := range a {
+		if a[i] == s {
+			return i
+		}
+	}
+	return -1
+}

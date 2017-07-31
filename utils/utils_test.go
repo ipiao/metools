@@ -19,14 +19,16 @@ type A struct {
 }
 
 func TestStruct2Map(t *testing.T) {
-	u := User{
-		ID:        1,
-		Username:  "tom",
-		Password:  "12dbau7",
-		Logintime: time.Now(),
-		Fields:    []int{1, 2, 4},
-		A: A{
-			B: "its b",
+	u := []User{
+		User{
+			ID:        1,
+			Username:  "tom",
+			Password:  "12dbau7",
+			Logintime: time.Now(),
+			Fields:    []int{1, 2, 4},
+			A: A{
+				B: "its b",
+			},
 		},
 	}
 
@@ -35,14 +37,16 @@ func TestStruct2Map(t *testing.T) {
 }
 
 func TestStructMarshalMap(t *testing.T) {
-	u := User{
-		ID:        1,
-		Username:  "tom",
-		Password:  "12dbau7",
-		Logintime: time.Now(),
-		Fields:    []int{1, 2, 4},
-		A: A{
-			B: "its b",
+	u := []User{
+		User{
+			ID:        1,
+			Username:  "tom",
+			Password:  "12dbau7",
+			Logintime: time.Now(),
+			Fields:    []int{1, 2, 4},
+			A: A{
+				B: "its b",
+			},
 		},
 	}
 
