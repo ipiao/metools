@@ -19,21 +19,20 @@ type A struct {
 }
 
 func TestStruct2Map(t *testing.T) {
-	u := []User{
-		User{
-			ID:        1,
-			Username:  "tom",
-			Password:  "12dbau7",
-			Logintime: time.Now(),
-			Fields:    []int{1, 2, 4},
-			A: A{
-				B: "its b",
-			},
+
+	u := User{
+		ID:        1,
+		Username:  "tom",
+		Password:  "12dbau7",
+		Logintime: time.Now(),
+		Fields:    []int{1, 2, 4},
+		A: A{
+			B: "its b",
 		},
 	}
 
 	m := Struct2Map(&u)
-	t.Logf("%+v", m)
+	t.Logf("%+v", m["a"])
 }
 
 func TestStructMarshalMap(t *testing.T) {
@@ -52,4 +51,18 @@ func TestStructMarshalMap(t *testing.T) {
 
 	m := StructMarshaalToMap(&u)
 	t.Logf("%+v", m)
+}
+
+func BenchmarkTransFieldName(b *testing.B) {
+	var name = "NsadaKsadaNadasMss"
+	for i := 0; i < b.N; i++ {
+		TransFieldName(name)
+	}
+}
+
+func BenchmarkSnakeName(b *testing.B) {
+	var name = "NsadaKsadaNadasMss"
+	for i := 0; i < b.N; i++ {
+		SnakeName(name)
+	}
 }
