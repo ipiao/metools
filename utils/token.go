@@ -79,7 +79,7 @@ func GenerateNewAccessToken(info map[string]interface{}, duration int64) (string
 
 // ParseAccessToken 解析token
 func ParseAccessToken(tokenString string) (*MyClaims, error) {
-	var err error
+
 	var claims = new(MyClaims)
 	var ok bool
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {

@@ -6,16 +6,16 @@ import (
 )
 
 type User struct {
-	ID        int64     `map:"id" json:"id"`
-	Username  string    `json:"user_name"`
-	Password  string    `json:"password"`
-	Logintime time.Time `json:"-"`
+	ID        int64  `map:"id" json:"id"`
+	Username  string `json:"user_name"`
+	password  string
+	Logintime time.Time `json:"logintime"`
 	Fields    []int     `json:"fields"`
-	A         A
+	A         A         `json:"a"`
 }
 
 type A struct {
-	B string
+	B string `json:"b"`
 }
 
 func TestStruct2Map(t *testing.T) {
@@ -23,7 +23,55 @@ func TestStruct2Map(t *testing.T) {
 	u := User{
 		ID:        1,
 		Username:  "tom",
-		Password:  "12dbau7",
+		password:  "12dbau7",
+		Logintime: time.Now(),
+		Fields:    []int{1, 2, 4},
+		A: A{
+			B: "its b",
+		},
+	}
+	m := Struct2Map(&u)
+	t.Logf("%+v", m)
+}
+
+func BenchmarkStruct2Map(b *testing.B) {
+	u := User{
+		ID:        1,
+		Username:  "tom",
+		password:  "12dbau7",
+		Logintime: time.Now(),
+		Fields:    []int{1, 2, 4},
+		A: A{
+			B: "its b",
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		Struct2Map(&u)
+	}
+}
+
+func BenchmarkStructMarshalMap(b *testing.B) {
+	u := User{
+		ID:        1,
+		Username:  "tom",
+		password:  "12dbau7",
+		Logintime: time.Now(),
+		Fields:    []int{1, 2, 4},
+		A: A{
+			B: "its b",
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		StructMarshalToMap(&u)
+	}
+}
+
+func TestStructMarshalMap(t *testing.T) {
+
+	u := User{
+		ID:        1,
+		Username:  "tom",
+		password:  "12dbau7",
 		Logintime: time.Now(),
 		Fields:    []int{1, 2, 4},
 		A: A{
@@ -31,25 +79,7 @@ func TestStruct2Map(t *testing.T) {
 		},
 	}
 
-	m := Struct2Map(&u)
-	t.Logf("%+v", m["a"])
-}
-
-func TestStructMarshalMap(t *testing.T) {
-	u := []User{
-		User{
-			ID:        1,
-			Username:  "tom",
-			Password:  "12dbau7",
-			Logintime: time.Now(),
-			Fields:    []int{1, 2, 4},
-			A: A{
-				B: "its b",
-			},
-		},
-	}
-
-	m := StructMarshaalToMap(&u)
+	m := StructMarshalToMap(&u)
 	t.Logf("%+v", m)
 }
 
