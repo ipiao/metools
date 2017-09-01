@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 
 	metools "github.com/ipiao/metools/utils"
 )
@@ -24,10 +25,10 @@ type idLoc struct {
 }
 
 var (
-	typeMap    = map[reflect.Type]string{}
-	idIndexMap = map[reflect.Type]*idLoc{}
-	// typeLock    = new(sync.Mutex)
-	// idIndexLock = new(sync.Mutex)
+	typeMap     = map[reflect.Type]string{}
+	idIndexMap  = map[reflect.Type]*idLoc{}
+	typeLock    = new(sync.RWMutex)
+	idIndexLock = new(sync.RWMutex)
 )
 
 // Resource is Resource
@@ -95,17 +96,26 @@ func GetType(i interface{}) string {
 }
 
 func getType(t reflect.Type) string {
-	if r, ok := typeMap[t]; ok {
-		return r
-	}
-	rt := indirect(t)
+
 	var typename string
-	if rt.Kind() != reflect.Struct {
-		typename = ""
-	} else {
-		typename = getTypeName(rt)
+
+	typeLock.RLock()
+	r, ok := typeMap[t]
+	typename = r
+	typeLock.RUnlock()
+
+	typeLock.Lock()
+	if !ok {
+		rt := indirect(t)
+		if rt.Kind() != reflect.Struct {
+			typename = ""
+		} else {
+			typename = getTypeName(rt)
+		}
+		typeMap[t] = typename
 	}
-	typeMap[t] = typename
+	typeLock.Unlock()
+
 	return typename
 }
 
@@ -125,17 +135,25 @@ func getTypeName(t reflect.Type) string {
 }
 
 func getIDLoc(t reflect.Type) *idLoc {
-	if r, ok := idIndexMap[t]; ok {
-		return r
-	}
-	rt := indirect(t)
 	var idloc = new(idLoc)
-	if rt.Kind() != reflect.Struct {
-		idloc.idType = typeInvalid
-	} else {
-		idloc = getIDIndex(rt)
+
+	idIndexLock.RLock()
+	r, ok := idIndexMap[t]
+	idloc = r
+	idIndexLock.RUnlock()
+
+	idIndexLock.Lock()
+	if !ok {
+		rt := indirect(t)
+		if rt.Kind() != reflect.Struct {
+			idloc.idType = typeInvalid
+		} else {
+			idloc = getIDIndex(rt)
+		}
+		idIndexMap[t] = idloc
 	}
-	idIndexMap[t] = idloc
+	idIndexLock.Unlock()
+
 	return idloc
 }
 
