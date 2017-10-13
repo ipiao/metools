@@ -96,3 +96,8 @@ func BenchmarkSnakeName(b *testing.B) {
 		SnakeName(name)
 	}
 }
+
+func TestBase64(t *testing.T) {
+	res := Base64Encode("ykk@#1001")
+	t.Log(res)
+}
