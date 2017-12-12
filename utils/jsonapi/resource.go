@@ -167,7 +167,7 @@ func getIDIndex(t reflect.Type) *idLoc {
 				}
 			}
 		}
-		if strings.ToLower(t.Field(i).Name) == "id" {
+		if strings.EqualFold(t.Field(i).Tag.Get("jsonapi"), "id") || strings.ToLower(t.Field(i).Name) == "id" {
 			if t.Field(i).Type.Kind() == reflect.String {
 				return &idLoc{
 					idType: typeString,

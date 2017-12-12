@@ -35,6 +35,19 @@ func (claim *MyClaims) Int64(key string) (int64, error) {
 	return res, nil
 }
 
+// Bool 获取bool值
+func (claim *MyClaims) Bool(key string) (bool, error) {
+	r, ok := claim.Info[key]
+	if !ok {
+		return false, fmt.Errorf("key named %s does not exists", key)
+	}
+	res, ok2 := r.(bool)
+	if !ok2 {
+		return false, fmt.Errorf("cannot parse interface %s to bool", key)
+	}
+	return res, nil
+}
+
 // String 获取string值
 func (claim *MyClaims) String(key string) (string, error) {
 	r, ok := claim.Info[key]
