@@ -182,3 +182,38 @@ func OutOfFence(c *Coord, fence []Coord) bool {
 	polygon := NewPolygon(fence)
 	return !polygon.IsInside(c)
 }
+
+// ExtractNCoordsFromRoute 从路线中提取特定数目的点，包含首、末两点
+// 采用均分法 n=1 区 1/2,n=2 取 1/3,2/3 ...
+func ExtractNCoordsFromRoute(route []Coord, n int) []Coord {
+	if n <= 2 {
+		return ExtractNInnerCoordsFromRoute(route, n)
+	}
+	length := len(route)
+	ret := []Coord{route[0]}
+	ret = append(ret, ExtractNInnerCoordsFromRoute(route[1:length-1], n-2)...)
+	ret = append(ret, route[length-1])
+	return ret
+}
+
+// ExtractNInnerCoordsFromRoute 从路线向内提取特定数目的点
+// 采用均分法 n=1 区 1/2,n=2 取 1/3,2/3 ...
+func ExtractNInnerCoordsFromRoute(route []Coord, n int) []Coord {
+	length := len(route)
+	if length <= n {
+		return route
+	}
+	ret := []Coord{}
+	if n >= 1 {
+		for i := 0; i < n; i++ {
+			ind := float64(i) * float64(length) / float64(n+1)
+			ceilInd := math.Ceil(ind)
+			if ind-ceilInd > 0.5 {
+				ret = append(ret, route[int(ceilInd+1)])
+			} else {
+				ret = append(ret, route[int(ceilInd)])
+			}
+		}
+	}
+	return ret
+}
