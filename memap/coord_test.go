@@ -1,9 +1,9 @@
-package metools
+package memap
 
 import (
 	"testing"
 
-	assert "gopkg.in/go-playground/assert.v1"
+	"github.com/stretchr/testify/assert"
 )
 
 // 测试坐标转换,差距在0.5m之内

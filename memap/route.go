@@ -1,4 +1,4 @@
-package metools
+package memap
 
 import (
 	"time"

@@ -1,4 +1,4 @@
-package parser
+package confparser
 
 import (
 	"encoding/json"
@@ -24,12 +24,22 @@ func ParseFile(path string, i interface{}, kind string) error {
 	}
 	switch kind {
 	case "json":
-		return json.Unmarshal(bs, i)
+		return jsonUnmarshal(bs, i)
 	case "yaml":
 		return yaml.Unmarshal(bs, i)
 	default:
 		return fmt.Errorf("err parser kind %s", kind)
 	}
+}
+
+func jsonUnmarshal(bs []byte, i interface{}) error {
+	switch i.(type) {
+	case *string:
+		*(i.(*string)) = string(bs)
+	default:
+		return json.Unmarshal(bs, i)
+	}
+	return nil
 }
 
 // ParseDir 配置文件路径保持在一个文件加下，直接读取文件夹下的文件进配置文件

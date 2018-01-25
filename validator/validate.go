@@ -1,4 +1,4 @@
-package metools
+package validator
 
 import "regexp"
 

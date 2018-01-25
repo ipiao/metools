@@ -1,4 +1,4 @@
-package metools
+package mencode
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/ipiao/metools/mutils"
 )
 
 var (
@@ -28,7 +29,7 @@ func (claim *MyClaims) Int64(key string) (int64, error) {
 	if !ok {
 		return 0, fmt.Errorf("key named %s does not exists", key)
 	}
-	res, err := IntfaceToInt64(r)
+	res, err := mutils.IntfaceToInt64(r)
 	if err != nil {
 		return res, err
 	}

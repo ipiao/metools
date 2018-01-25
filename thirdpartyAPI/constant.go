@@ -1,4 +1,4 @@
-package metools
+package thirdapi
 
 // appkey、appSecreat、aliAppCode
 const (

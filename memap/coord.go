@@ -1,4 +1,4 @@
-package metools
+package memap
 
 // redis 是采用的WGS84无误
 // 坐标系之间不采用相同的半径，转换后的坐标算距离,误差率在 0.1%,采用相同的半径，误差率在 0.01%

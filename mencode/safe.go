@@ -1,4 +1,4 @@
-package metools
+package mencode
 
 import (
 	"crypto/md5"
@@ -21,16 +21,6 @@ func MD5(source string) string {
 	h := md5.New()
 	h.Write([]byte(source))
 	return hex.EncodeToString(h.Sum(nil))
-}
-
-// CreatePwd 创建密码
-func CreatePwd(sourcePwd string) string {
-	return MD5(sourcePwd)
-}
-
-// CheckPwd 检验密码
-func CheckPwd(pwd, dest string) bool {
-	return MD5(pwd) == dest
 }
 
 // Base64Decode base64 RFC 4648 解密,标准解密

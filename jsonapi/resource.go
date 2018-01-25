@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	metools "github.com/ipiao/metools/utils"
+	"github.com/ipiao/metools/mutils"
 )
 
 type idType int
@@ -129,7 +129,7 @@ func getTypeName(t reflect.Type) string {
 		var args = make([]reflect.Value, 0)
 		typename = v.Method(m.Index).Call(args)[0].String()
 	} else {
-		typename = metools.SnakeName(t.Name())
+		typename = mutils.SnakeName(t.Name())
 	}
 	return typename
 }
