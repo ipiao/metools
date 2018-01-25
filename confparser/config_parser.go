@@ -1,6 +1,8 @@
 package confparser
 
 import (
+	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -27,9 +29,16 @@ func ParseFile(path string, i interface{}, kind string) error {
 		return jsonUnmarshal(bs, i)
 	case "yaml":
 		return yaml.Unmarshal(bs, i)
+	case "gob":
+		return gobDecode(bs, i)
 	default:
 		return fmt.Errorf("err parser kind %s", kind)
 	}
+}
+
+func gobDecode(bs []byte, i interface{}) error {
+	r := bytes.NewReader(bs)
+	return gob.NewDecoder(r).Decode(i)
 }
 
 func jsonUnmarshal(bs []byte, i interface{}) error {
