@@ -9,8 +9,6 @@ import (
 	"reflect"
 	"strings"
 	"text/template"
-
-	metools "github.com/ipiao/metools/utils"
 )
 
 // StructCreator create struct
