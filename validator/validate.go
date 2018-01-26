@@ -1,17 +1,29 @@
 package validator
 
-import "regexp"
+import (
+	"regexp"
 
-// IsPhone 验证是否是手机号
-func IsPhone(s string) bool {
-	regExp := `^0?(13|14|15|18)[0-9]{9}$`
-	reg := regexp.MustCompile(regExp)
-	return reg.MatchString(s)
+	"gopkg.in/go-playground/validator.v9"
+)
+
+const (
+	phoneRegexString = "^1[0-9]{10}$"
+)
+
+var (
+	phoneRegex = regexp.MustCompile(phoneRegexString)
+)
+
+// Validate overide
+type Validate = validator.Validate
+
+// New a validator
+func New() *Validate {
+	vd := validator.New()
+	vd.RegisterValidation("phone", isPhone)
+	return vd
 }
 
-// IsEmail 验证是否是邮箱
-func IsEmail(s string) bool {
-	regExp := `^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$`
-	reg := regexp.MustCompile(regExp)
-	return reg.MatchString(s)
+func isPhone(f1 validator.FieldLevel) bool {
+	return phoneRegex.MatchString(f1.Field().String())
 }
