@@ -11,6 +11,7 @@ func TestNode(t *testing.T) {
 	t.Log(n0.Map())
 	t.Log(n0, n01)
 	t.Log(n01.Level())
+	t.Log(n0.Degree(), n0.Depth())
 	n0.DeleteChild(0)
 	t.Log(n0, n01)
 }
