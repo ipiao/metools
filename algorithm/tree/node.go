@@ -4,35 +4,6 @@ import (
 	"errors"
 )
 
-// Tree 定义树结构
-type Tree interface {
-	AddChild(child Tree) error
-	DeleteChild(i int)
-
-	Degree() int
-	Depth() int
-	Level() int
-
-	WhichChild(Tree) int
-	WhichChildOfParent() int
-	GenerationsNum() int
-
-	HasChild(child Tree) bool
-	IsRoot() bool
-	IsLeaf() bool
-
-	Parent() Tree
-	TreeRoot() Tree
-	Child(i int) (Tree, bool)
-	LeftChild() (Tree, bool)
-	RightChild() (Tree, bool)
-	LeftSibling() (Tree, bool)
-	RightSibling() (Tree, bool)
-
-	LeafGenerations() []Tree
-	LevelChildren(lev int) []Tree
-}
-
 // Node 节点
 type Node struct {
 	val      interface{}
@@ -189,8 +160,8 @@ func (n *Node) IsLeaf() bool {
 	return len(n.children) == 0
 }
 
-// TreeRoot 返回节点所在树的根节点
-func (n *Node) TreeRoot() *Node {
+// Root 返回节点所在树的根节点
+func (n *Node) Root() *Node {
 	var root = n
 	for root.parent != nil {
 		root = root.parent
@@ -209,7 +180,7 @@ func (n *Node) GenerationsNum() int {
 
 // TreeRootGenerationsNum 节点所在树的根节点的子孙数
 func (n *Node) TreeRootGenerationsNum() int {
-	root := n.TreeRoot()
+	root := n.Root()
 	return root.GenerationsNum()
 }
 
@@ -228,7 +199,7 @@ func (n *Node) LevelChildren(lev int) []*Node {
 
 // TreeRootLevelChildren 节点所在树的根节点层次 lev 的字节点,lev>1
 func (n *Node) TreeRootLevelChildren(lev int) []*Node {
-	root := n.TreeRoot()
+	root := n.Root()
 	return root.LevelChildren(lev)
 }
 
@@ -243,7 +214,7 @@ func (n *Node) Depth() int {
 
 // TreeDepth 节点所在树的深度
 func (n *Node) TreeDepth() int {
-	root := n.TreeRoot()
+	root := n.Root()
 	return root.Depth()
 }
 
@@ -262,6 +233,6 @@ func (n *Node) LeafGenerations() []*Node {
 
 // TreeLeafGenerations 所在树的所有叶节点
 func (n *Node) TreeLeafGenerations() []*Node {
-	root := n.TreeRoot()
+	root := n.Root()
 	return root.LeafGenerations()
 }
