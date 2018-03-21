@@ -2,6 +2,11 @@ package tree
 
 import "errors"
 
+// k 树的性质
+// 节点数 n = n0 + n1 + n2 + ... + nk
+// n = n1 + 2n2 +3n3 + ... + knk
+// 所以 n0 = n2 + 2n3 + ... + (k-1)nk
+
 // TNode 树根，树根是没有向上的
 type TNode interface {
 	SetVal(val interface{})
