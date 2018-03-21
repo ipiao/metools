@@ -2,6 +2,7 @@ package tree
 
 import (
 	"errors"
+	"log"
 )
 
 // k 树的性质
@@ -47,6 +48,7 @@ type Tree interface {
 	Map() map[string]interface{}
 
 	BinaryTree() TNode
+	Copy() TNode
 }
 
 // Node 节点
@@ -337,30 +339,27 @@ func (n *Node) LRDVisit(fn func(TNode) error) error {
 
 // BinaryTree 树生成二叉树
 func (n *Node) BinaryTree() TNode {
-	nn := *n
+	nn := NewNode(n.val)
 	dg := n.Degree()
 	if dg > 0 {
-		// bt0 := NewNode(n.children[0].GetVal())
-		// if n.children[0].Degree() > 0 {
-		// 	bt0.AddChild(forest2BinaryTree(n.children[0].Children()))
-		// } else {
-		// 	bt0.AddChild(NewNode(nil))
-		// }
-		// nn.AddChild(bt0)
-		// if dg > 1 {
-		// 	bt0.AddChild(forest2BinaryTree(n.children[1:dg]))
-		// }
-		// // cls := make([]TNode, dg)
-		// // for i := 0; i < dg; i++ {
-		// // 	if i == 0 {
-		// // 		cls = append(cls, n.children[i].BinaryTree())
-		// // 	}
-		// // }
-		// // nn.AddChild(forest2BinaryTree(cls))
-	} else {
-		nn.AddChild(NewNode(nil))
+		cls := make([]TNode, dg)
+		for i := 0; i < dg; i++ {
+			cp := n.children[i]
+			log.Println(cp.Map())
+			cls[i] = cp.BinaryTree()
+		}
+		nn.AddChild(bforest2BTree(cls))
 	}
-	return &nn
+	return nn
+}
+
+// Copy 复制
+func (n *Node) Copy() TNode {
+	var nn = NewNode(n.val)
+	for i := range n.children {
+		nn.AddChild(n.children[i].Copy())
+	}
+	return nn
 }
 
 func bforest2BTree(nodes []TNode) TNode {
@@ -372,6 +371,6 @@ func bforest2BTree(nodes []TNode) TNode {
 		fnode.AddChild(enode)
 		return fnode
 	}
-	fnod := bforest2BTree(nodes[1:len(nodes)])
+	fnod := bforest2BTree(nodes[1:])
 	return bforest2BTree([]TNode{nodes[0], fnod})
 }

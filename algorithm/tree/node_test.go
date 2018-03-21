@@ -41,7 +41,25 @@ func TestNode(t *testing.T) {
 }
 
 func TestBT(t *testing.T) {
-	// n0 := NewNode("1")
+	n0 := NewNode("1")
+	n10 := NewNode("2")
+	n101 := NewNode("21")
+	n10.AddChild(n101)
+	n11 := NewNode("3")
+	n111 := NewNode("31")
+	n11.AddChild(n111)
+	n12 := NewNode("4")
+	n121 := NewNode("41")
+	n12.AddChild(n121)
+	// tns := []TNode{n10, n11, n12}
+	// bt := bforest2BTree(tns)
+	n0.AddChildren(n10, n11, n12)
+	bt := n0.BinaryTree()
+	bs, _ := json.Marshal(bt.Map())
+	t.Log(string(bs))
+}
+
+func TestBTT(t *testing.T) {
 	n10 := NewNode("2")
 	n101 := NewNode("21")
 	n10.AddChild(n101)
@@ -53,8 +71,7 @@ func TestBT(t *testing.T) {
 	n12.AddChild(n121)
 	tns := []TNode{n10, n11, n12}
 	bt := bforest2BTree(tns)
-	// n0.AddChildren(n10, n11, n12)
-	// bt := n0.BinaryTree()
+
 	bs, _ := json.Marshal(bt.Map())
 	t.Log(string(bs))
 }
