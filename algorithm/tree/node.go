@@ -1,6 +1,8 @@
 package tree
 
-import "errors"
+import (
+	"errors"
+)
 
 // k 树的性质
 // 节点数 n = n0 + n1 + n2 + ... + nk
@@ -38,7 +40,13 @@ type Tree interface {
 	LeftChild() (TNode, bool)
 	RightChild() (TNode, bool)
 
+	DLRVisit(fn func(TNode) error) error
+	LDRVisit(fn func(n TNode) error) error
+	LRDVisit(fn func(n TNode) error) error
+
 	Map() map[string]interface{}
+
+	BinaryTree() TNode
 }
 
 // Node 节点
@@ -72,6 +80,16 @@ func (n *Node) AddChild(child TNode) error {
 	}
 	child.SetParent(n)
 	n.children = append(n.children, child)
+	return nil
+}
+
+// AddChildren 添加子节点
+func (n *Node) AddChildren(children ...TNode) error {
+	for _, child := range children {
+		if err := n.AddChild(child); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -244,4 +262,116 @@ func (n *Node) Map() map[string]interface{} {
 	}
 	m["children"] = chis
 	return m
+}
+
+// DLRVisit 先(根)序遍历
+func (n *Node) DLRVisit(fn func(TNode) error) error {
+	err := fn(n)
+	if err != nil {
+		return err
+	}
+	lnode, has := n.LeftChild()
+	if has {
+		err = lnode.DLRVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	rnode, has := n.RightChild()
+	if has {
+		err = rnode.DLRVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// LDRVisit 中(根)序遍历
+func (n *Node) LDRVisit(fn func(TNode) error) error {
+	var err error
+	lnode, has := n.LeftChild()
+	if has {
+		err = lnode.LDRVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	err = fn(n)
+	if err != nil {
+		return err
+	}
+	rnode, has := n.RightChild()
+	if has {
+		err = rnode.LDRVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	return err
+}
+
+// LRDVisit 后(根)序遍历
+func (n *Node) LRDVisit(fn func(TNode) error) error {
+	var err error
+	lnode, has := n.LeftChild()
+	if has {
+		err = lnode.LRDVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	rnode, has := n.RightChild()
+	if has {
+		err = rnode.LRDVisit(fn)
+		if err != nil {
+			return err
+		}
+	}
+	err = fn(n)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+// BinaryTree 树生成二叉树
+func (n *Node) BinaryTree() TNode {
+	nn := *n
+	dg := n.Degree()
+	if dg > 0 {
+		// bt0 := NewNode(n.children[0].GetVal())
+		// if n.children[0].Degree() > 0 {
+		// 	bt0.AddChild(forest2BinaryTree(n.children[0].Children()))
+		// } else {
+		// 	bt0.AddChild(NewNode(nil))
+		// }
+		// nn.AddChild(bt0)
+		// if dg > 1 {
+		// 	bt0.AddChild(forest2BinaryTree(n.children[1:dg]))
+		// }
+		// // cls := make([]TNode, dg)
+		// // for i := 0; i < dg; i++ {
+		// // 	if i == 0 {
+		// // 		cls = append(cls, n.children[i].BinaryTree())
+		// // 	}
+		// // }
+		// // nn.AddChild(forest2BinaryTree(cls))
+	} else {
+		nn.AddChild(NewNode(nil))
+	}
+	return &nn
+}
+
+func bforest2BTree(nodes []TNode) TNode {
+	if len(nodes) == 1 {
+		return nodes[0]
+	} else if len(nodes) == 2 {
+		fnode := nodes[0]
+		enode := nodes[1]
+		fnode.AddChild(enode)
+		return fnode
+	}
+	fnod := bforest2BTree(nodes[1:len(nodes)])
+	return bforest2BTree([]TNode{nodes[0], fnod})
 }
