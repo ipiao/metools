@@ -31,7 +31,7 @@ func Huffman(nodes []WNode) *WNode {
 Out:
 	for length > 2 {
 		length--
-		log.Println("len nodes is ", length)
+		log.Println("len nodes is ", len(nodes))
 		nNode := Huffman(nodes[:2])
 		nnodes := make([]WNode, length)
 		for i := 2; i < len(nodes); i++ {
