@@ -3,6 +3,7 @@ package mutils
 import "reflect"
 
 // Index 下标
+// TODO bug
 func Index(s interface{}, slice interface{}) int {
 	v := reflect.ValueOf(slice)
 	k := reflect.TypeOf(slice).Kind()
