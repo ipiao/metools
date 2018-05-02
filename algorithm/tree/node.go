@@ -374,3 +374,14 @@ func bforest2BTree(nodes []TNode) TNode {
 	fnod := bforest2BTree(nodes[1:])
 	return bforest2BTree([]TNode{nodes[0], fnod})
 }
+
+// LevelVist 层次遍历
+func (n *Node) LevelVist(fn func(TNode) error) error {
+	// 1.首先将根节点放入队列中。
+	// 2.当队列为非空时，循环执行步骤3到步骤5，否则执行6；
+	// 3.出队列取得一个结点，访问该结点；
+	// 4.若该结点的左子树为非空，则将该结点的左子树入队列；
+	// 5.若该结点的右子树为非空，则将该结点的右子树入队列；
+	// 6.结束。
+	return nil
+}
