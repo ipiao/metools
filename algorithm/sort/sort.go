@@ -295,3 +295,42 @@ func buildHeap(data Swap) int {
 	}
 	return heapSize
 }
+
+// 分类 -------------- 内部比较排序
+// 数据结构 ---------- 数组
+// 最差时间复杂度 ---- O(n^2)
+// 最优时间复杂度 ---- O(nlogn)
+// 平均时间复杂度 ---- O(nlogn)
+// 所需辅助空间 ------ O(logn~n)
+// 稳定性 ------------ 不稳定
+
+// QuickSort 快排
+func QuickSort(data Swap) {
+	n := data.Len()
+	for i := 0; i < n; i++ {
+		quicksort(data, i, n-1)
+	}
+}
+
+func quicksort(data Swap, left, right int) {
+	if left > right {
+		return
+	}
+	tempI := left
+	tempJ := right
+	for tempI != tempJ {
+		for (!data.Less(tempJ, left)) && tempI < tempJ {
+			tempJ--
+		}
+		for (!data.Less(left, tempI)) && tempI < tempJ {
+			tempI++
+		}
+		if tempI < tempJ {
+			data.Swap(tempI, tempJ)
+		}
+	}
+	data.Swap(left, tempI)
+
+	quicksort(data, left, tempI-1)
+	quicksort(data, tempI+1, right)
+}

@@ -38,3 +38,14 @@ func TestUgly(t *testing.T) {
 func TestInt(t *testing.T) {
 	log.Println(int32(859963392))
 }
+
+func TestArray(t *testing.T) {
+	a := array(15345)
+	t.Log(a)
+}
+
+func TestMaxNum(t *testing.T) {
+	s := []int{1, 2, 3, 23, 34, 2345, 12, 23}
+	MaxNum(s)
+	t.Log(s)
+}
