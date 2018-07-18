@@ -97,7 +97,13 @@ func BenchmarkSnakeName(b *testing.B) {
 	}
 }
 
-func TestBase64(t *testing.T) {
-	res := Base64Encode("ykk@#1001")
-	t.Log(res)
+// func TestBase64(t *testing.T) {
+// 	res := Base64Encode("ykk@#1001")
+// 	t.Log(res)
+// }
+
+func TestRemoveDuplicatesInts(t *testing.T) {
+	arr := []int{1, 1, 2, 3, 4, 4}
+	arr = RemoveDuplicatesInts(arr)
+	t.Log(arr)
 }

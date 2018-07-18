@@ -1,6 +1,9 @@
 package mutils
 
-import "reflect"
+import (
+	"reflect"
+	"sort"
+)
 
 // Index 下标
 // TODO bug
@@ -51,4 +54,24 @@ func IndexStringArray(s string, a []string) int {
 		}
 	}
 	return -1
+}
+
+func RemoveDuplicatesInts(nums []int) []int {
+	if len(nums) == 0 {
+		return nil
+	}
+	sort.Ints(nums)
+	base := nums[0]
+	l := len(nums)
+	for i := 1; i < l; {
+		if nums[i] == base {
+			nums = append(nums[:i], nums[i+1:]...)
+			l--
+		} else {
+			base = nums[i]
+			i++
+		}
+	}
+
+	return nums
 }
