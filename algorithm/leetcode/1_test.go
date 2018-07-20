@@ -46,3 +46,16 @@ func TestMyAtoi(t *testing.T) {
 	n := myAtoi("  a124551")
 	t.Log(n)
 }
+
+func TestCount(t *testing.T) {
+	s := countAndSay(4)
+	t.Log(s)
+}
+
+func TestRemoveNthNode(t *testing.T) {
+	// head1 := &ListNode{1, nil} // &ListNode{3, &ListNode{5, &ListNode{7, &ListNode{9, nil}}}}}
+	head2 := &ListNode{2, &ListNode{4, nil}} //&ListNode{6, &ListNode{4, &ListNode{2, nil}}}}}
+	// t.Logf("%p", head)
+	ret := hasCycle(head2)
+	t.Log("", ret)
+}

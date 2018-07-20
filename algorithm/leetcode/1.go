@@ -1,7 +1,9 @@
 package leetcode
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 	"sort"
 	"strings"
@@ -264,4 +266,185 @@ func myAtoi(str string) int {
 		ret = ret*10 + nbs[i]
 	}
 	return bas * ret
+}
+
+func countAndSay(n int) string {
+	if n == 1 {
+		return "1"
+	}
+	base := countAndSay(n - 1)
+	i := 0
+	count := 1
+	ret := ""
+	for j := 1; j < len(base); j++ {
+		if base[j] == base[i] {
+			count++
+		} else {
+			ret += fmt.Sprint(count, string(base[i]))
+			i = j
+			count = 1
+		}
+	}
+	ret += fmt.Sprint(count, string(base[i]))
+	return ret
+}
+
+func longestCommonPrefix(strs []string) string {
+	base := strs[0]
+	for i := 0; i < len(base); i++ {
+		b := base[i]
+		for j := 1; j < len(strs); j++ {
+			if i >= len(strs[j]) || strs[j][i] != b {
+				return base[:i]
+			}
+		}
+	}
+	return base
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	}
+	if l2 == nil {
+		return l1
+	}
+
+	var ret *ListNode
+	if l1.Val <= l2.Val {
+		ret = l1
+		l1 = l1.Next
+		ret.Next = nil
+	} else {
+		ret = l2
+		l2 = l2.Next
+		ret.Next = nil
+	}
+	retLast := ret
+	for l1 != nil && l2 != nil {
+		if l1.Val <= l2.Val {
+			retLast.Next = l1
+			l1 = l1.Next
+			retLast = retLast.Next
+			retLast.Next = nil
+		} else {
+			retLast.Next = l2
+			l2 = l2.Next
+			retLast = retLast.Next
+			retLast.Next = nil
+		}
+	}
+	if l1 != nil {
+		retLast.Next = l1
+	}
+	if l2 != nil {
+		retLast.Next = l2
+	}
+	return ret
+}
+
+func reverseList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	preNode := head
+	node := head.Next
+	preNode.Next = nil
+	nextNode := node.Next
+
+	for nextNode != nil {
+		node.Next = preNode
+		preNode = node
+		node = nextNode
+		nextNode = node.Next
+	}
+	node.Next = preNode
+	head = node
+	return head
+}
+
+func reverseList2(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	node := reverseList2(head.Next)
+	if head.Next != nil {
+		head.Next.Next = head
+		head.Next = nil
+	}
+	return node
+}
+
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+
+	itNode := head
+	for i := 1; i < n; i++ {
+		itNode = itNode.Next
+	}
+
+	var npNode *ListNode
+	nNode := head
+	for itNode.Next != nil {
+		itNode = itNode.Next
+		npNode = nNode
+		nNode = nNode.Next
+	}
+	if npNode == nil {
+		return nNode.Next
+	}
+	npNode.Next = nNode.Next
+	return head
+}
+
+func (node *ListNode) String() string {
+	bs, _ := json.Marshal(node)
+	return string(bs)
+}
+
+func isPalindromeList(head *ListNode) bool {
+	node := head
+	count := 0
+	for node != nil {
+		node = node.Next
+		count++
+	}
+	if count <= 1 {
+		return true
+	}
+	midNode := head
+	for i := 0; i < (count)/2; i++ {
+		midNode = midNode.Next
+	}
+	if count%2 == 1 {
+		midNode = midNode.Next
+	}
+	midNode = reverseList(midNode)
+	log.Println(midNode)
+	log.Println(head)
+	for midNode != nil {
+		if head.Val != midNode.Val {
+			return false
+		}
+		midNode = midNode.Next
+		head = head.Next
+	}
+	return true
+}
+
+func hasCycle(node *ListNode) bool {
+	if node == nil {
+		return false
+	}
+	for node.Next != nil {
+		if node.Next == node {
+			return true
+		}
+		node = node.Next
+	}
+	return false
 }

@@ -36,3 +36,15 @@ func (l *LinkedList) String() string {
 	bs, _ := json.Marshal(l)
 	return string(bs)
 }
+
+func reverse2(head *LinkedList) *LinkedList {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	node := reverse2(head.Next)
+	if head.Next != nil {
+		head.Next.Next = head
+		head.Next = nil
+	}
+	return node
+}
