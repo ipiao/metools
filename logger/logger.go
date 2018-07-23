@@ -24,6 +24,7 @@ type (
 		prefix     string
 		level      Lvl
 		skip       int
+		basePath   string
 		output     io.Writer
 		template   *fasttemplate.Template
 		levels     []string
@@ -48,7 +49,6 @@ const (
 )
 
 var (
-	proPath       = ""
 	global        = New("-")
 	defaultHeader = `{"time":"${time}","level":"${level}","prefix":"${prefix}",` +
 		`"file":"${relative_file}","line":"${line}"}`
@@ -56,22 +56,18 @@ var (
 
 func init() {
 	global.skip = 3
-
+	global.basePath = getGopathSrc()
 }
 
-// 	使用项目相对路径的时候
-func SetProPath(path string) {
-	proPath = path
+func getGopathSrc() string {
+	return path.Join(os.Getenv("GOPATH"), "src")
 }
 
-func New(prefix string, skip ...int) (l *Logger) {
-	skipi := 2
-	if len(skip) > 0 {
-		skipi = skip[0]
-	}
+func New(prefix string) (l *Logger) {
 	l = &Logger{
-		level:    INFO,
-		skip:     skipi,
+		level:    DEBUG,
+		skip:     2,
+		basePath: getGopathSrc(),
 		prefix:   prefix,
 		template: l.newTemplate(defaultHeader),
 		color:    color.New(),
@@ -84,6 +80,11 @@ func New(prefix string, skip ...int) (l *Logger) {
 	l.initLevels()
 	l.SetOutput(colorable.NewColorableStdout())
 	return
+}
+
+func (l *Logger) SetFilePath(skip int, basePath string) {
+	l.skip = skip
+	l.basePath = basePath
 }
 
 func (l *Logger) initLevels() {
@@ -380,7 +381,7 @@ func (l *Logger) log(v Lvl, format string, args ...interface{}) {
 		_, err := l.template.ExecuteFunc(buf, func(w io.Writer, tag string) (int, error) {
 			switch tag {
 			case "time":
-				return w.Write([]byte(time.Now().Format("2016-01-02 15:04:05")))
+				return w.Write([]byte(time.Now().Format("2006-01-02 15:04:05")))
 			case "time_rfc3339":
 				return w.Write([]byte(time.Now().Format(time.RFC3339)))
 			case "time_rfc3339_nano":
@@ -392,7 +393,7 @@ func (l *Logger) log(v Lvl, format string, args ...interface{}) {
 			case "long_file":
 				return w.Write([]byte(file))
 			case "relative_file": // 相对文件路径
-				relFile, _ := filepath.Rel(proPath, file)
+				relFile, _ := filepath.Rel(l.basePath, file)
 				if relFile == "" {
 					relFile = file
 				}
