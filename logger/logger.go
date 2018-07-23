@@ -52,6 +52,7 @@ var (
 	global        = New("-")
 	defaultHeader = `{"time":"${time}","level":"${level}","prefix":"${prefix}",` +
 		`"file":"${relative_file}","line":"${line}"}`
+	// simpleHeader = `{"T";"${time}","Lvl":"${level}","P":${prefix},"RF":"${relative_file}","Line":"${line}"}` // 备选
 )
 
 func init() {
