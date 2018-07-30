@@ -83,8 +83,11 @@ func New(prefix string) (l *Logger) {
 	return
 }
 
-func (l *Logger) SetFilePath(skip int, basePath string) {
+func (l *Logger) Skip(skip int) {
 	l.skip = skip
+}
+
+func (l *Logger) SetBasePath(basePath string) {
 	l.basePath = basePath
 }
 
