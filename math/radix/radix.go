@@ -1,11 +1,30 @@
 package radix
 
-import "github.com/ipiao/metools/mutils"
+import (
+	"fmt"
 
-var tables = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	"github.com/ipiao/metools/mutils"
+)
+
+var (
+	tables   = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	tableMap map[byte]int
+)
+
+func init() {
+	initTabMap()
+}
 
 func SetTables(s string) {
 	tables = s
+	initTabMap()
+}
+
+func initTabMap() {
+	tableMap = make(map[byte]int, len(tables))
+	for i := range tables {
+		tableMap[tables[i]] = i
+	}
 }
 
 // Number 是进制数
@@ -35,6 +54,25 @@ func NewNumber(num int, base uint8) *Number {
 
 	if len(ret.mods) == 0 {
 		ret.mods = append(ret.mods, 0)
+	}
+	return ret
+}
+
+// NewNumberFromString 根据字符串获取
+func NewNumberFromString(s string, base uint8) *Number {
+	if len(s) == 0 {
+		return nil
+	}
+	ret := &Number{
+		base: base,
+		sign: 1,
+	}
+	for i := range s {
+		if mod, ok := tableMap[s[i]]; ok && int(base) > mod {
+			ret.mods = append(ret.mods, mod)
+		} else {
+			panic(fmt.Sprint("unkown byte ", s[i], mod))
+		}
 	}
 	return ret
 }
