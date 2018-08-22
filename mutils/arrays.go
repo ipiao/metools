@@ -32,3 +32,29 @@ func BytesToInt(b []byte) int {
 	binary.Read(bytesBuffer, binary.BigEndian, &tmp)
 	return int(tmp)
 }
+
+func ReversInts(bs []int) {
+	if len(bs) <= 1 {
+		return
+	}
+	head := bs[0]
+	ReversInts(bs[1:])
+	copy(bs[:len(bs)-1], bs[1:])
+	bs[len(bs)-1] = head
+}
+
+func ReverseString(s string) string {
+	bs := []byte(s)
+	ReversBytes(bs)
+	return string(bs)
+}
+
+func ReversBytes(bs []byte) {
+	if len(bs) <= 1 {
+		return
+	}
+	head := bs[0]
+	ReversBytes(bs[1:])
+	copy(bs[:len(bs)-1], bs[1:])
+	bs[len(bs)-1] = head
+}

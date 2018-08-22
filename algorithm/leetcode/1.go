@@ -138,42 +138,6 @@ func rotate(matrix [][]int) {
 	}
 }
 
-func reverseString(s string) string {
-	bs := []byte(s)
-	reversBytes(bs)
-	return string(bs)
-}
-
-func reversBytes(bs []byte) {
-	if len(bs) <= 1 {
-		return
-	}
-	head := bs[0]
-	reversBytes(bs[1:])
-	copy(bs[:len(bs)-1], bs[1:])
-	bs[len(bs)-1] = head
-}
-
-func reversInts(bs []int) {
-	if len(bs) <= 1 {
-		return
-	}
-	head := bs[0]
-	reversInts(bs[1:])
-	copy(bs[:len(bs)-1], bs[1:])
-	bs[len(bs)-1] = head
-}
-
-func ints10Int(num int) []int {
-	var ret []int
-	for num > 0 {
-		ret = append(ret, num%10)
-		num = num / 10
-	}
-
-	return ret
-}
-
 func firstUniqChar(s string) int {
 	var baseArr [256]int
 	for i := range s {

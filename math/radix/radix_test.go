@@ -1,10 +1,13 @@
 package radix
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestRadix(t *testing.T) {
-	fmt.Printf("%x", 10)
+	n := NewNumber(-19, 16)
+	t.Log(n.mods)
+	t.Log(n.sign)
+	t.Log(n.Int())
+	t.Log(n.String())
 }
