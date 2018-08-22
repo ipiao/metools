@@ -54,3 +54,7 @@ func (n *Number) String() string {
 func (n *Number) Int() int {
 	return mutils.IntsTInt(n.mods, n.base) * int(n.sign)
 }
+
+func (n *Number) ConvertTo(base uint8) *Number {
+	return NewNumber(n.Int(), base)
+}
