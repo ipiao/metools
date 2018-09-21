@@ -27,24 +27,6 @@ func NewUgly(base []int) *Ugly {
 	return u
 }
 
-// Get 获取第n个丑数
-func (u *Ugly) Get(n int) int {
-	for sumLen(u.ranks) < n {
-		u.calNext()
-	}
-	sl := 0
-	ret := 0
-	for i := range u.ranks {
-		li := len(u.ranks[i])
-		if sl+li >= n {
-			ret = u.ranks[i][n-sl-1]
-			break
-		}
-		sl += li
-	}
-	return ret
-}
-
 // 第n次计算
 func (u *Ugly) calNext() {
 	var n = len(u.cbase) + 1
@@ -122,4 +104,22 @@ func powmul(a, b []int) int {
 		c[i] = pow(a[i], b[i])
 	}
 	return mul(c)
+}
+
+// Get 获取第n个丑数
+func (u *Ugly) Get(n int) int {
+	for sumLen(u.ranks) < n {
+		u.calNext()
+	}
+	sl := 0
+	ret := 0
+	for i := range u.ranks {
+		li := len(u.ranks[i])
+		if sl+li >= n {
+			ret = u.ranks[i][n-sl-1]
+			break
+		}
+		sl += li
+	}
+	return ret
 }

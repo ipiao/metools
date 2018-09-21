@@ -412,3 +412,9 @@ func hasCycle(node *ListNode) bool {
 	}
 	return false
 }
+
+func poorPigs(buckets int, minutesToDie int, minutesToTest int) int {
+	times := minutesToTest / minutesToDie
+	base := math.Ceil(math.Pow(float64(buckets), 1/float64(times)))
+	return int(base) + times - 1
+}
