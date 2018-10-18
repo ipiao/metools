@@ -20,3 +20,9 @@ func EnJSON(v interface{}) ([]byte, error) {
 	err := encode.Encode(v)
 	return bf.Bytes(), err
 }
+
+// EnJSONStr 解析成json str
+func EnJSONStr(v interface{}) (string, error) {
+	bs, err := EnJSON(v)
+	return string(bs), err
+}
