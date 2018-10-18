@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -15,7 +16,18 @@ import (
 )
 
 // ParseFile parse file into interface
-func ParseFile(path string, i interface{}, kind string) error {
+func ParseFile(path string, i interface{}, kinds ...string) error {
+	var kind string
+	if len(kinds) > 0 {
+		kind = kinds[0]
+	} else {
+		kind = filepath.Ext(path)
+	}
+
+	if kind == "" {
+		return fmt.Errorf("can not recgonize file kind")
+	}
+
 	f, err := os.Open(path)
 	if err != nil {
 		return err
@@ -24,10 +36,11 @@ func ParseFile(path string, i interface{}, kind string) error {
 	if err != nil {
 		return err
 	}
+
 	switch kind {
 	case "json":
 		return jsonUnmarshal(bs, i)
-	case "yaml":
+	case "yaml", "yml":
 		return yaml.Unmarshal(bs, i)
 	case "gob":
 		return gobDecode(bs, i)
