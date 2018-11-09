@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -21,7 +20,11 @@ func ParseFile(path string, i interface{}, kinds ...string) error {
 	if len(kinds) > 0 {
 		kind = kinds[0]
 	} else {
-		kind = filepath.Ext(path)
+		for i := len(path) - 1; i >= 0 && !os.IsPathSeparator(path[i]); i-- {
+			if path[i] == '.' {
+				kind = path[i+1:]
+			}
+		}
 	}
 
 	if kind == "" {
