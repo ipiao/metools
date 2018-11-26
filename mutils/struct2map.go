@@ -7,10 +7,15 @@ import (
 
 // Struct2Map turn struct to map
 func Struct2Map(obj interface{}) map[string]interface{} {
-	return struct2map(reflect.ValueOf(obj))
+	return struct2map(reflect.ValueOf(obj), "json")
 }
 
-func struct2map(v reflect.Value) map[string]interface{} {
+// Struct2Map turn struct to map
+func Struct2MapWithTagName(obj interface{}, tagName string) map[string]interface{} {
+	return struct2map(reflect.ValueOf(obj), tagName)
+}
+
+func struct2map(v reflect.Value, tagName string) map[string]interface{} {
 	k := v.Kind()
 	if k == reflect.Ptr || k == reflect.Interface {
 		v = v.Elem()
@@ -20,14 +25,14 @@ func struct2map(v reflect.Value) map[string]interface{} {
 		var data = make(map[string]interface{})
 		for i := 0; i < t.NumField(); i++ {
 			if v.Field(i).CanInterface() {
-				tag := t.Field(i).Tag.Get("map")
+				tag := t.Field(i).Tag.Get(tagName)
 				if tag == "-" {
 					continue
 				} else if tag == "" {
 					tag = SnakeName(t.Field(i).Name)
 				}
 				if (v.Field(i).Kind() == reflect.Struct || v.Field(i).Kind() == reflect.Ptr) && v.Field(i).Type().String() != "time.Time" {
-					data[tag] = struct2map(v.Field(i))
+					data[tag] = struct2map(v.Field(i), tagName)
 				} else {
 					data[tag] = v.Field(i).Interface()
 				}
