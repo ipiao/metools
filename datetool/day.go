@@ -2,6 +2,14 @@ package datetool
 
 import "time"
 
+func TimeMillSec(t time.Time) int64 {
+	return t.UnixNano() / 1e6
+}
+
+func NowMillSec() int64 {
+	return time.Now().UnixNano() / 1e6
+}
+
 func IsDayToday(t time.Time) bool {
 	now := time.Now()
 	y, m, d := t.Date()
@@ -16,8 +24,45 @@ func IsSameDay(t1, t2 time.Time) bool {
 }
 
 // 后一天比前一天相差几天，同一天相差0
-func DayInterval(t1, t2 time.Time) int64 {
-	u1 := t1.Unix()
-	u2 := t2.Unix()
-	return u2/86400 - u1/86400
+func DayInterval(t1, t2 time.Time) int {
+	if t2.Before(t1) {
+		return -DayInterval(t2, t1)
+	}
+	interval := 0
+	y1 := t1.Year()
+	y2 := t2.Year()
+	if y1 < y2 {
+		for i := y1; i < y2; i++ {
+			interval += GetYearDays(i)
+		}
+	}
+	interval += t2.YearDay() - t1.YearDay()
+	return interval
+}
+
+func GetMonthDays(year, month int) int {
+	switch month {
+	case 1, 3, 5, 7, 8, 10, 12:
+		return 31
+	case 4, 6, 9, 11:
+		return 30
+	case 2:
+		if IsLeapYear(year) {
+			return 29
+		} else {
+			return 28
+		}
+	}
+	return 0
+}
+
+func GetYearDays(year int) int {
+	if IsLeapYear(year) {
+		return 366
+	}
+	return 365
+}
+
+func IsLeapYear(year int) bool {
+	return (year%4 == 0 && year%100 != 0) || year%400 == 0
 }
