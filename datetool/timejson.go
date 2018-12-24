@@ -1,6 +1,9 @@
 package datetool
 
 import (
+	"encoding/json"
+	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -28,4 +31,25 @@ func (t Time) MarshalJSON() ([]byte, error) {
 
 func (t Time) String() string {
 	return time.Time(t).Format(timeFormat)
+}
+
+type UnixTime time.Time
+
+func (j UnixTime) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprint(time.Time(j).Unix())), nil
+}
+
+func (j *UnixTime) UnmarshalJSON(data []byte) error {
+	var err error
+	if len(data) == 10 {
+		var unix int64
+		unix, err = strconv.ParseInt(string(data), 10, 64)
+		t := time.Unix(unix, 0)
+		*j = UnixTime(t)
+	} else {
+		t := time.Time{}
+		err = json.Unmarshal(data, &t)
+		*j = UnixTime(t)
+	}
+	return err
 }
