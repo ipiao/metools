@@ -15,8 +15,8 @@ var (
 )
 
 func init() {
-	pwd := mencode.Base64Decode("eWtrQCMxMDAx")
-	epool = email.NewPool("smtp.qq.com:587", 5, smtp.PlainAuth("", "530151330@qq.com", pwd, "smtp.qq.com"))
+	pwd := mencode.Base64Decode("")
+	epool, _ = email.NewPool("smtp.qq.com:587", 5, smtp.PlainAuth("", "xxx@qq.com", pwd, "smtp.qq.com"))
 	go handleNotify()
 }
 
