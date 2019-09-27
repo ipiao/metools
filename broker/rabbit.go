@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ipiao/meim/log"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/streadway/amqp"
 )
 
 type RPCHandler func([]byte) []byte
@@ -40,9 +42,9 @@ func (cfg *RabbitMQConfig) init() {
 	if cfg.ExchangeName == "" {
 		panic("exchange name not set")
 	}
-	if cfg.ExchangeKind != "direct" && cfg.ExchangeKind != "fanout" && cfg.ExchangeKind != "topic" {
-		cfg.ExchangeKind = "direct"
-	}
+	//if cfg.ExchangeKind != "direct" && cfg.ExchangeKind != "fanout" && cfg.ExchangeKind != "topic" {
+	cfg.ExchangeKind = "direct"
+	//}
 	if cfg.RPCTimeout == 0 {
 		cfg.RPCTimeout = time.Second * 5
 	}
@@ -51,9 +53,6 @@ func (cfg *RabbitMQConfig) init() {
 	}
 	if cfg.QueuePrefix == "" {
 		cfg.QueuePrefix = "message"
-	}
-	if cfg.Node <= 0 {
-		panic("cfg node must be greater than 0")
 	}
 }
 
@@ -86,6 +85,9 @@ func NewRabbitMQ(cfg *RabbitMQConfig, rpcHandler RPCHandler) *RabbitMQ {
 	}
 
 	if cfg.Channels&ChannelSub != 0 {
+		if cfg.Node <= 0 {
+			log.Fatal("cfg node must be greater than 0")
+		}
 		go func() {
 			rb.subMessageChan = make(chan []byte, cfg.ChanSize)
 			rb.subscribe(redial(ctx, cfg.Url, rb.cfg.ExchangeName, rb.cfg.ExchangeKind))
@@ -102,6 +104,9 @@ func NewRabbitMQ(cfg *RabbitMQConfig, rpcHandler RPCHandler) *RabbitMQ {
 	}
 
 	if cfg.Channels&ChannelRPCServer != 0 {
+		if cfg.Node <= 0 {
+			log.Fatal("cfg node must be greater than 0")
+		}
 		if rb.rpcHandler == nil {
 			panic(" rpcHandler is not set")
 		}
@@ -315,7 +320,7 @@ func (rb *RabbitMQ) getQueueName() string {
 
 // 队列绑定key
 func (rb *RabbitMQ) getBindKey() string {
-	return fmt.Sprintf("%s.%d.*", rb.cfg.QueuePrefix, rb.cfg.Node)
+	return fmt.Sprintf("%s.%d", rb.cfg.QueuePrefix, rb.cfg.Node)
 }
 
 // rpc队列名
@@ -325,7 +330,7 @@ func (rb *RabbitMQ) getRpcQueueName() string {
 
 // 队列绑定key
 func (rb *RabbitMQ) getRpcBindKey() string {
-	return fmt.Sprintf("%s_rpc.%d.*", rb.cfg.QueuePrefix, rb.cfg.Node)
+	return fmt.Sprintf("%s_rpc.%d", rb.cfg.QueuePrefix, rb.cfg.Node)
 }
 
 // 路由key
